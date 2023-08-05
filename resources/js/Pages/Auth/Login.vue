@@ -7,12 +7,16 @@
         <div v-if="form.errors.email" class="input-error">{{ form.errors.email }}</div>
       </div>
       <div>
-        <label for="password" class="label mt-4">Email</label>
+        <label for="password" class="label mt-4">Password</label>
         <input id="password" v-model="form.password" type="password" class="input" />
         <div v-if="form.errors.password" class="input-error">{{ form.errors.password }}</div>
       </div>
       <div>
         <button class="btn-primary w-full  mt-4" type="submit">Login</button>
+
+        <div class="mt-2 text-center">
+          <Link :href="route('user-account.create')" class="text-sm text-gray-500">Not registered? Click here to create an account.</Link>
+        </div>
       </div>
     </div>
   </form>
@@ -20,6 +24,7 @@
 
 <script setup>
 import { useForm } from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3'
 
 const form = useForm({
   email: null,

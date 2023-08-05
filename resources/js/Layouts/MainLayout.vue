@@ -20,7 +20,8 @@
             <Link :href="route('logout')" method="DELETE" as="button">Logout</Link>
           </div>
         </div>
-        <div v-else>
+        <div v-else class="flex items-center gap-2">
+          <Link :href="route('user-account.create')">Register</Link>
           <Link :href="route('login')">Login</Link>
         </div>
       </nav>
