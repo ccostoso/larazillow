@@ -17,16 +17,17 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        \App\Models\User::factory()->create([
+        \App\Models\User::factory([
             'name' => 'Test User',
             'email' => 'test@example.com',
-        ]);
+            'is_admin' => 1,
+        ])->has(\App\Models\Listing::factory(10))->create();
 
-        \App\Models\User::factory()->create([
+        \App\Models\User::factory([
             'name' => 'Test User 2',
             'email' => 'test2@example.com',
-        ]);
+        ])->has(\App\Models\Listing::factory(10))->create();
 
-        \App\Models\Listing::factory(20)->create();
+        // \App\Models\Listing::factory(10)->create();
     }
 }
