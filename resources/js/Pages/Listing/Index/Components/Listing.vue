@@ -18,12 +18,6 @@
         Edit
       </Link>
     </div>
-
-    <div>
-      <Link :href="route('listing.destroy', { listing: listing.id })" method="DELETE" as="button">
-        Delete
-      </Link>
-    </div>
   </Box>
 </template>
 
