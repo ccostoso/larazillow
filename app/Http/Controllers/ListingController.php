@@ -28,31 +28,8 @@ class ListingController extends Controller
             'Listing/Index',
             [
                 'filters' => $filters,
-                'listings' => Listing::orderByDesc('created_at')
-                    ->when(
-                        $filters['priceMin'] ?? false,
-                        fn ($query, $value) => $query->where('price', '>=', $value)
-                    )
-                    ->when(
-                        $filters['priceMax'] ?? false,
-                        fn ($query, $value) => $query->where('price', '<=', $value)
-                    )
-                    ->when(
-                        $filters['beds'] ?? false,
-                        fn ($query, $value) => $query->where('beds', (int) $value < 6 ? '=' : '>=', $value)
-                    )
-                    ->when(
-                        $filters['baths'] ?? false,
-                        fn ($query, $value) => $query->where('baths', (int) $value < 6 ? '=' : '>=', $value)
-                    )
-                    ->when(
-                        $filters['areaMin'] ?? false,
-                        fn ($query, $value) => $query->where('area', '>=', $value)
-                    )
-                    ->when(
-                        $filters['areaMax'] ?? false,
-                        fn ($query, $value) => $query->where('area', '<=', $value)
-                    )
+                'listings' => Listing::latest()
+                    ->filter($filters)
                     ->paginate(10)
                     ->withQueryString()
             ]
