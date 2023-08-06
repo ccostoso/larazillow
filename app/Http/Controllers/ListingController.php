@@ -16,12 +16,45 @@ class ListingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filters = $request->only([
+            'priceMin', 'priceMax', 'beds', 'baths', 'areaMin', 'areaMax'
+        ]);
+
+        // dump($filters);
+
         return inertia(
             'Listing/Index',
             [
-                'listings' => Listing::orderByDesc('created_at')->paginate(10),
+                'filters' => $filters,
+                'listings' => Listing::orderByDesc('created_at')
+                    ->when(
+                        $filters['priceMin'] ?? false,
+                        fn ($query, $value) => $query->where('price', '>=', $value)
+                    )
+                    ->when(
+                        $filters['priceMax'] ?? false,
+                        fn ($query, $value) => $query->where('price', '<=', $value)
+                    )
+                    ->when(
+                        $filters['beds'] ?? false,
+                        fn ($query, $value) => $query->where('beds', (int) $value < 6 ? '=' : '>=', $value)
+                    )
+                    ->when(
+                        $filters['baths'] ?? false,
+                        fn ($query, $value) => $query->where('baths', (int) $value < 6 ? '=' : '>=', $value)
+                    )
+                    ->when(
+                        $filters['areaMin'] ?? false,
+                        fn ($query, $value) => $query->where('area', '>=', $value)
+                    )
+                    ->when(
+                        $filters['areaMax'] ?? false,
+                        fn ($query, $value) => $query->where('area', '<=', $value)
+                    )
+                    ->paginate(10)
+                    ->withQueryString()
             ]
         );
     }
