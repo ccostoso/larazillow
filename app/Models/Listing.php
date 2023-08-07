@@ -14,6 +14,8 @@ class Listing extends Model
 
     protected $fillable = ['beds', 'baths', 'area', 'city', 'code', 'street', 'street_nr', 'price'];
 
+    protected $sortable = ['price', 'created_at'];
+
     public function owner(): BelongsTo
     {
         // Using full namespace name and ::class constant to avoid importing every model that User model is related to
@@ -51,6 +53,15 @@ class Listing extends Model
             ->when(
                 $filters['areaMax'] ?? false,
                 fn ($query, $value) => $query->where('area', '<=', $value)
+            )->when(
+                $filters['deleted'] ?? false,
+                fn ($query, $value) => $query->withTrashed()
+            )->when(
+                $filters['by'] ?? false,
+                fn ($query, $value) => 
+                !in_array($value, $this->sortable) 
+                    ? $query 
+                    : $query->orderBy($value, $filters['order'] ?? 'desc')
             );
     }
 }
